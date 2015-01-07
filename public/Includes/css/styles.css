@@ -1,0 +1,85 @@
+html, body {
+  background-color: #474747;
+  color: #FBFBFB;
+  font-size: 16px;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Sans-serif';
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-text-size-adjust: none; }
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+::-webkit-scrollbar {
+  width: 0 !important; }
+
+.group:after {
+  content: "";
+  line-height: 0;
+  clear: both;
+  visibility: hidden;
+  display: block; }
+
+ul {
+  list-style-type: none; }
+
+.container {
+  height: 100%; }
+  .container .content {
+    height: 100%; }
+
+.file-list, .file-contents {
+  display: inline-block;
+  height: 100%;
+  width: 49%;
+  vertical-align: top; }
+
+.file-list ul li:hover {
+  cursor: pointer;
+  font-weight: bold; }
+
+.file-contents .item {
+  border: none;
+  display: none;
+  height: 100%;
+  overflow: auto;
+  vertical-align: top;
+  width: 100%; }
+  .file-contents .item.show {
+    display: block; }
+
+.enclosure-analysis li {
+  border-bottom: 1px black solid;
+  padding: 10px 0; }
+
+h1, h2 {
+  text-align: center; }
+
+.chart {
+  margin: 30px auto;
+  width: 745px; }
+  .chart ul {
+    display: inline-block;
+    margin: 30px 0 0 30px;
+    padding: 0;
+    width: 300px;
+    vertical-align: top; }
+    .chart ul li {
+      color: #323232;
+      padding: 8px 10px; }
+      .chart ul li span {
+        vertical-align: middle; }
+      .chart ul li .number {
+        display: inline-block;
+        font-size: 20px;
+        font-weight: bold;
+        width: 30px; }
+      .chart ul li .label {
+        padding-left: 20px; }
+      .chart ul li:first-child {
+        padding: 0;
+        color: #FBFBFB; }
