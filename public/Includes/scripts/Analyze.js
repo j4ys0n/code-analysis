@@ -35,7 +35,7 @@
 			});
 		}
 
-		function saveStats(f, l, r, res){
+		function saveEnclosureStats(f, l, r, res){
 			var both = 0,
 				before = 0,
 				after = 0,
@@ -117,18 +117,76 @@
 					parensLeftNoSpace, parensRightSpaceBefore, parensRightSpaceAfter,
 					parensRightSpaceBeforeAndAfter, parensRightNoSpace
 				];
-				for(i = 0; i < patterns.length; i++){
-					while((match = patterns[i].exec(f.content)) != null){
-						results[i].push(match.index);
-					}
+			for(i = 0; i < patterns.length; i++){
+				while((match = patterns[i].exec(f.content)) != null){
+					results[i].push(match.index);
 				}
-				saveStats(f, l, r, results);
+			}
+			saveEnclosureStats(f, l, r, results);
+		}
+
+		function saveFunctionStats(f, res){
+			var stats = {}
+			stats.statsSpaceAfterFunc = res[0].length;
+			stats.statsNoSpaceAfterFunc = res[1].length;
+			stats.statsSpaceAfterFuncAndParens = res[2].length;
+			stats.statsNoSpaceAfterFuncSpaceAfterParens = res[3].length;
+			updateFileStats(f._id, stats);
+		}
+
+		function functionAnalysis(f){
+			var match, i,
+				spaceAfterFunc = [],
+				spaceAfterFuncRegex = new RegExp('function\\s\\([^\\)]*\\)\\{', 'g'),
+				noSpaceAfterFunc = [],
+				noSpaceAfterFuncRegex = new RegExp('function\\([^\\)]*\\)\\{', 'g'),
+				spaceAfterFuncAndParens = [],
+				spaceAfterFuncAndParensRegex = new RegExp('function\\s\\([^\\)]*\\)\\s\\{', 'g'),
+				noSpaceAfterFuncSpaceAfterParens = [],
+				noSpaceAfterFuncSpaceAfterParensRegex = new RegExp('function\\([^\\)]*\\)\\s\\{', 'g'),
+				patterns = [
+					spaceAfterFuncRegex, noSpaceAfterFuncRegex, spaceAfterFuncAndParensRegex, noSpaceAfterFuncSpaceAfterParensRegex
+				],
+				results = [
+					spaceAfterFunc, noSpaceAfterFunc, spaceAfterFuncAndParens, noSpaceAfterFuncSpaceAfterParens
+				];
+			for(i = 0; i < patterns.length; i++){
+				while((match = patterns[i].exec(f.content)) != null){
+					results[i].push(match.index);
+				}
+			}
+			saveFunctionStats(f, results);
+		}
+
+		function operatorAnalysis(f){
+			var match, i,
+				noSpace = [],
+				noSpaceRegex = new RegExp('[^\\s,=,\\-,\\+,>,<,\\!,\\(,\\[,\\{,&]{1,}[=,\\-,\\+,>,<,\\!,(&{2})]{1,}[^\\s,=,\\-,\\+,>,<,\\!,\\),\\],\\,&}]{1,}'),
+				spaceBefore = [],
+				spaceBeforeRegex = new RegExp('[^\\s,=,\\-,\\+,>,<,\\!,\\(,\\),\\[,\\],\\{,\\},&]{1,}[\\s]+[=,\\-,\\+,>,<,\\!,(&{2})]{1,}[^\\s,=,\\-,\\+,>,<,\\!,\\),\\],\\,&}]{1,}'),
+				spaceAfter = [],
+				spaceAfterRegex = new RegExp(''),
+				spaceBeforeAndAfter = [],
+				spaceBeforeAndAfterRegex = new RegExp(''),
+				patterns =[
+
+				],
+				results =[
+
+				];
+			for(i = 0; i < patterns.length; i++){
+				while((match = patterns[i].exec(f.content)) != null){
+					results[i].push(match.index);
+				}
+			}
+			//saveOperatorStats(f, results);
 		}
 
 		function analyzeFile(f){
 			enclosureAnalysis(f, '(', ')');
 			enclosureAnalysis(f, '[', ']');
 			enclosureAnalysis(f, '{', '}');
+			functionAnalysis(f);
 		}
 
 		function analyzeFiles(){
@@ -155,10 +213,7 @@
 		doc
 		.delegate('.analyze-files', 'click', function(e){
 			analyzeFiles();
-		})
-		.delegate('.make-charts', 'click', function(e){
-			makeChart();
-		})
+		});
 
 		return {
 			init: init

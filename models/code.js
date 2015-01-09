@@ -27,7 +27,11 @@ var CodeSchema = new Schema({
     statsEnclosureSpacingBracesBoth: {type: Number, default: 0},
     statsEnclosureSpacingBracesBefore: {type: Number, default: 0},
     statsEnclosureSpacingBracesAfter: {type: Number, default: 0},
-    statsEnclosureSpacingBracesNone: {type: Number, default: 0}
+    statsEnclosureSpacingBracesNone: {type: Number, default: 0},
+    statsSpaceAfterFunc: {type: Number, default: 0},
+    statsNoSpaceAfterFunc: {type: Number, default: 0},
+    statsSpaceAfterFuncAndParens: {type: Number, default: 0},
+    statsNoSpaceAfterFuncSpaceAfterParens: {type: Number, default: 0}
 });
 
 //turn off autoindexing. helps with performance in production

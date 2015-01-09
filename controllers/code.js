@@ -35,7 +35,11 @@ module.exports = {
                     'statsEnclosureSpacingBracesBoth',
                     'statsEnclosureSpacingBracesBefore',
                     'statsEnclosureSpacingBracesAfter',
-                    'statsEnclosureSpacingBracesNone'
+                    'statsEnclosureSpacingBracesNone',
+                    'statsSpaceAfterFunc',
+                    'statsNoSpaceAfterFunc',
+                    'statsSpaceAfterFuncAndParens',
+                    'statsNoSpaceAfterFuncSpaceAfterParens'
                 ]
             },
             action;
@@ -51,6 +55,12 @@ module.exports = {
         }
         Code.findByIdAndUpdate(id, updates, function(err, code){
             res.json(Response.code(err, code), Response.data(err, code));
+        });
+    },
+    deleteFile: function( req, res ){
+        var id = decodeURIComponent( req.params.id );
+        Code.findOneAndRemove( {_id: id }, function( err, code ){
+            res.json( Response.code( err, code ), Response.data( err, code ) );
         });
     }
 };

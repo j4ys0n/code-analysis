@@ -3,6 +3,16 @@
 
 	var doc = $(document),
 		win = $(w),
+		colors = {
+			color1: '#E83175',
+			highlight1: '#E85281',
+			color2: '#FF4628',
+			highlight2: '#FF674C',
+			color3: '#E86819',
+			highlight3: '#E87F3A',
+			color4: '#FFAE2F',
+			highlight4: '#FFBE53'
+		},
 		stats = {
 			enclosureSpacing: {
 				parenthesis: {
@@ -23,6 +33,12 @@
 					after: 0,
 					none: 0
 				}
+			},
+			functions: {
+				spaceAfterFunc: 0,
+				noSpaceAfterFunc: 0,
+				spaceAfterFuncAndParens: 0,
+				noSpaceAfterFuncSpaceAfterParens: 0
 			}
 		};
 
@@ -46,89 +62,117 @@
 		var parensData = [
 			{
 				value: stats.enclosureSpacing.parenthesis.both,
-				color: '#3366FF',
-				highlight: '#99CCFF',
+				color: colors.color1,
+				highlight: colors.highlight1,
 				label: 'Space before and after each ( )'
 			},
 			{
 				value: stats.enclosureSpacing.parenthesis.before,
-				color: '#FF3300',
-				highlight: '#FF9966',
+				color: colors.color2,
+				highlight: colors.highight2,
 				label: 'Space before (and after)'
 			},
 			{
 				value: stats.enclosureSpacing.parenthesis.after,
-				color: '#33CC33',
-				highlight: '#66FF99',
+				color: colors.color3,
+				highlight: colors.highlight3,
 				label: 'Space after( and before )'
 			},
 			{
 				value: stats.enclosureSpacing.parenthesis.none,
-				color: '#CC00FF',
-				highlight: '#CC99FF',
+				color: colors.color4,
+				highlight: colors.highlight4,
 				label: 'no spaces around ()'
 			}],
 			bracketsData = [
 			{
 				value: stats.enclosureSpacing.brackets.both,
-				color: '#3366FF',
-				highlight: '#99CCFF',
+				color: colors.color1,
+				highlight: colors.highlight1,
 				label: 'Space before and after each [ ]'
 			},
 			{
 				value: stats.enclosureSpacing.brackets.before,
-				color: '#FF3300',
-				highlight: '#FF9966',
+				color: colors.color2,
+				highlight: colors.highight2,
 				label: 'Space before [and after]'
 			},
 			{
 				value: stats.enclosureSpacing.brackets.after,
-				color: '#33CC33',
-				highlight: '#66FF99',
+				color: colors.color3,
+				highlight: colors.highlight3,
 				label: 'Space after[ and before ]'
 			},
 			{
 				value: stats.enclosureSpacing.brackets.none,
-				color: '#CC00FF',
-				highlight: '#CC99FF',
+				color: colors.color4,
+				highlight: colors.highlight4,
 				label: 'no spaces around []'
 			}],
 			bracesData = [
 			{
 				value: stats.enclosureSpacing.braces.both,
-				color: '#3366FF',
-				highlight: '#99CCFF',
+				color: colors.color1,
+				highlight: colors.highlight1,
 				label: 'Space before and after each { }'
 			},
 			{
 				value: stats.enclosureSpacing.braces.before,
-				color: '#FF3300',
-				highlight: '#FF9966',
+				color: colors.color2,
+				highlight: colors.highight2,
 				label: 'Space before {and after}'
 			},
 			{
 				value: stats.enclosureSpacing.braces.after,
-				color: '#33CC33',
-				highlight: '#66FF99',
+				color: colors.color3,
+				highlight: colors.highlight3,
 				label: 'Space after{ and before }'
 			},
 			{
 				value: stats.enclosureSpacing.braces.none,
-				color: '#CC00FF',
-				highlight: '#CC99FF',
+				color: colors.color4,
+				highlight: colors.highlight4,
 				label: 'no spaces around {}'
+			}],
+			functionsData = [
+			{
+				value: stats.functions.spaceAfterFunc,
+				color: colors.color1,
+				highlight: colors.highlight1,
+				label: 'function (){'
+			},
+			{
+				value: stats.functions.noSpaceAfterFunc,
+				color: colors.color2,
+				highlight: colors.highight2,
+				label: 'function(){'
+			},
+			{
+				value: stats.functions.spaceAfterFuncAndParens,
+				color: colors.color3,
+				highlight: colors.highlight3,
+				label: 'function () {'
+			},
+			{
+				value: stats.functions.noSpaceAfterFuncSpaceAfterParens,
+				color: colors.color4,
+				highlight: colors.highlight4,
+				label: 'function() {'
 			}],
 			parensCtx = document.getElementById('parens-chart').getContext('2d'),
 			bracketsCtx = document.getElementById('brackets-chart').getContext('2d'),
 			bracesCtx = document.getElementById('braces-chart').getContext('2d'),
-			options = {},
+			functionsCtx = document.getElementById('function-chart').getContext('2d'),
+			options = {segmentStrokeColor: '#666666', animationEasing: 'easeOutLinear'},
 			parensChart = new Chart(parensCtx).Doughnut(parensData, options),
-			bracketsChart = new Chart(bracketsCtx).Doughnut(bracketsData),
-			bracesChart = new Chart(bracesCtx).Doughnut(bracesData);
+			bracketsChart = new Chart(bracketsCtx).Doughnut(bracketsData, options),
+			bracesChart = new Chart(bracesCtx).Doughnut(bracesData, options),
+			functionsChart = new Chart(functionsCtx).Doughnut(functionsData, options);
 
 			addLegend(parensData, $('.parens ul'));
 			addLegend(bracketsData, $('.brackets ul'));
 			addLegend(bracesData, $('.braces ul'));
+			addLegend(functionsData, $('.function ul'));
 	}
 
 	function getTotals(files){
@@ -146,13 +190,17 @@
 			stats.enclosureSpacing.braces.before += parseInt(files[i].statsEnclosureSpacingBracesBefore,10);
 			stats.enclosureSpacing.braces.after += parseInt(files[i].statsEnclosureSpacingBracesAfter,10);
 			stats.enclosureSpacing.braces.none += parseInt(files[i].statsEnclosureSpacingBracesNone,10);
+			stats.functions.spaceAfterFunc += parseInt(files[i].statsSpaceAfterFunc,10);
+			stats.functions.noSpaceAfterFunc += parseInt(files[i].statsNoSpaceAfterFunc,10);
+			stats.functions.spaceAfterFuncAndParens += parseInt(files[i].statsSpaceAfterFuncAndParens,10);
+			stats.functions.noSpaceAfterFuncSpaceAfterParens += parseInt(files[i].statsNoSpaceAfterFuncSpaceAfterParens,10);
 		}
 		makeChart();
 	}
 
 	function getData(){
 		var req = $.ajax({
-			url: 'http://localhost:8000/api/files/js'
+			url: '/api/files/js'
 		})
 		req.done(function(data){
 			getTotals(data.data);

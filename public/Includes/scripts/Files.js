@@ -25,7 +25,7 @@
 			fileContentDisplay: '.file-contents',
 			getFileContentButton: '.get-file-content',
 			rawFileURL: 'https://raw.githubusercontent.com/',
-			excludes: ['require', 'jquery'],
+			excludes: ['require', 'jquery', 'Chart.min'],
 			includes: ['.html', '.htm', '.css','.scss','.ejs','.js','.php']
 		};
 		//mix in the defaults and settings

@@ -16,4 +16,6 @@ module.exports = function(app) {
   app.get('/api/files/:type', code.getFilesByType);
   //update file stats
   app.post('/api/file/:id', code.updateFileStats);
+  //delete file
+  app.del('/api/file/:id', code.deleteFile)
 };
