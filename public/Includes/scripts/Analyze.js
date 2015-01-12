@@ -158,6 +158,15 @@
 			saveFunctionStats(f, results);
 		}
 
+		function saveOperatorStats(f, res){
+			var stats = {};
+			stats.statsOperatorsNoSpace = res[0];
+			stats.statsOperatorsSpaceBefore = res[1];
+			stats.statsOperatorsSpaceAfter = res[2];
+			stats.statsOperatorsSpaceBeforeAndAfter = res[3];
+			updateFileStats(f._id, stats);
+		}
+
 		function operatorAnalysis(f){
 			var match, i,
 				noSpace = [],
@@ -165,21 +174,21 @@
 				spaceBefore = [],
 				spaceBeforeRegex = new RegExp('[^\\s,=,\\-,\\+,>,<,\\!,\\(,\\),\\[,\\],\\{,\\},&]{1,}[\\s]+[=,\\-,\\+,>,<,\\!,(&{2})]{1,}[^\\s,=,\\-,\\+,>,<,\\!,\\),\\],\\,&}]{1,}'),
 				spaceAfter = [],
-				spaceAfterRegex = new RegExp(''),
+				spaceAfterRegex = new RegExp('[^\\s,=,\\-,+,>,<,\\!,\\(,\\),\\[,\\],\\{,\\},&]{1,}[\\s][=,\\-,\\+,>,<,\\!,^&&$]{1,}[^\\s,=,\\-,+,>,<,\\!,\\),\\],\\,&}]{1,}'),
 				spaceBeforeAndAfter = [],
-				spaceBeforeAndAfterRegex = new RegExp(''),
+				spaceBeforeAndAfterRegex = new RegExp('[^\\s,=,\\-,+,>,<,\\!,\\(,\\),\\[,\\],\\{,\\},&]{1,}[\\s][=,\\-,\\+,>,<,\\!,^&&$]{1,}[\\s][^\\s,=,\\-,+,>,<,\\!,\\),\\],\\,&}]{1,}'),
 				patterns =[
-
+					noSpaceRegex, spaceBeforeRegex, spaceAfterRegex, spaceBeforeAndAfterRegex
 				],
 				results =[
-
+					noSpace, spaceBefore, spaceAfter, spaceBeforeAndAfter
 				];
 			for(i = 0; i < patterns.length; i++){
 				while((match = patterns[i].exec(f.content)) != null){
 					results[i].push(match.index);
 				}
 			}
-			//saveOperatorStats(f, results);
+			saveOperatorStats(f, results);
 		}
 
 		function analyzeFile(f){
@@ -187,6 +196,7 @@
 			enclosureAnalysis(f, '[', ']');
 			enclosureAnalysis(f, '{', '}');
 			functionAnalysis(f);
+			//operatorAnalysis(f);
 		}
 
 		function analyzeFiles(){

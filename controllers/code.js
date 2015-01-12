@@ -39,7 +39,11 @@ module.exports = {
                     'statsSpaceAfterFunc',
                     'statsNoSpaceAfterFunc',
                     'statsSpaceAfterFuncAndParens',
-                    'statsNoSpaceAfterFuncSpaceAfterParens'
+                    'statsNoSpaceAfterFuncSpaceAfterParens',
+                    'statsOperatorsNoSpace',
+                    'statsOperatorsSpaceBefore',
+                    'statsOperatorsSpaceAfter',
+                    'statsOperatorsSpaceBeforeAndAfter'
                 ]
             },
             action;

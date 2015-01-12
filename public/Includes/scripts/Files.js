@@ -10,11 +10,11 @@
 		fileList = [];
 		self.oDefaults = {
 			contentType: 'application/json; charset=utf-8',
-			stash: false,
+			stash: true,
 			//stashPath: 'http://jjacobs@stash.hugeinc.com/scm/',
 			stashPath: 'https://stash.hugeinc.com/',
 			gitPath: 'https://github.com/',
-			stashFileClass: '.file-row a:not(.browse-up)',
+			stashFileClass: '.filebrowser-table .folder a, .filebrowser-table .file a',
 			fileClass: '.files .content a',
 			filePathInput: '.git-path',
 			getFilesButton: '.get-files',
@@ -25,7 +25,7 @@
 			fileContentDisplay: '.file-contents',
 			getFileContentButton: '.get-file-content',
 			rawFileURL: 'https://raw.githubusercontent.com/',
-			excludes: ['require', 'jquery', 'Chart.min'],
+			excludes: ['require', 'jquery', 'Chart.min', 'node_modules', 'bower_components', 'dist', 'libs', 'images', 'psd'],
 			includes: ['.html', '.htm', '.css','.scss','.ejs','.js','.php']
 		};
 		//mix in the defaults and settings
@@ -41,13 +41,16 @@
 				url: domain+path
 			});
 			req.done(function(data){
+
 				var files;
 				if(oOptions.stash){
 					files = $(data).find(oOptions.stashFileClass);
+					//console.log(files);
+
 				}else{
 					files = $(data).find(oOptions.fileClass);
 				}
-				console.log(files);
+				//console.log(files);
 				files.each(function(index){
 					var t = $(this),
 						path, id,
@@ -55,10 +58,11 @@
 						filename, filetype;
 					//t = t.prop('href').replace('http://localhost:8000/', 'https://github.com/');
 					path = t.prop('href').replace('http://localhost:8000/', '').replace('/blob','');
-					//path = path.replace('projects/projects', 'projects');
-					if(path.indexOf('.') === -1){
+
+					if(path.indexOf('.') === -1 && !t.parents().hasClass('browse-up') && path.indexOf('node_modules') === -1 && path.indexOf('bower_components') === -1){
 						getFileList(path);
 					}else{
+						console.log(path)
 						for(i = 0; i < oOptions.includes.length; i++){
 							if(path.indexOf(oOptions.includes[i]) > -1){
 								include = true;
@@ -92,7 +96,13 @@
 				})
 				.done(function(data, status, xhr){
 					var path = this.url, index = -1, i;
-					path = path.replace(oOptions.rawFileURL, '');
+
+					if(oOptions.stash){
+						path = path.replace(oOptions.stashPath, '');
+						path = path.replace('?raw', '');
+					}else{
+						path = path.replace(oOptions.rawFileURL, '');
+					}
 					f = $( document.createElement('textarea') );
 					index = fileList.indexOf(path);
 					for(i = 0; i < fileList.length; i++){
@@ -109,6 +119,7 @@
 		}
 
 		function printFiles(){
+			console.log(fileList);
 			var list = $( document.createElement('ul') ),
 				item, i;
 
