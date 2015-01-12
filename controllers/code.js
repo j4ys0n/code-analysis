@@ -10,6 +10,16 @@ module.exports = {
             res.json( Response.code( err, file ), Response.data( err, file ) );
         });
     },
+    addFiles: function( req, res ){
+        var files = req.body.data,
+            i = 0;
+        for( i; i < files.length; i++ ){
+            var file = new Code( files[i] );
+            file.save( function( err, file ){
+                res.json( Response.code( err, file ), Response.data( err, file ) );
+            });
+        }
+    },
     getFilesByType: function( req, res ){
         var type = decodeURIComponent( req.params.type );
         Code.find( { 'type': type } ).exec( function( err, code ){

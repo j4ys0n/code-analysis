@@ -10,12 +10,14 @@ module.exports = function(app) {
   app.get('/charts', function(req, res){
       res.render('charts');
   })
-  //add files
+  //add file
   app.put('/api/file', code.addFile);
+  //add files
+  app.put('/api/files', code.addFiles);
   //get files by type
   app.get('/api/files/:type', code.getFilesByType);
   //update file stats
   app.post('/api/file/:id', code.updateFileStats);
   //delete file
-  app.del('/api/file/:id', code.deleteFile)
+  app.del('/api/file/:id', code.deleteFile);
 };
